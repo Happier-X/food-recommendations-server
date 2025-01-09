@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import * as argon2 from 'argon2';
 import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
   async register(dto: RegisterDto) {
     if (!dto.password) {
@@ -40,10 +44,12 @@ export class AuthService {
     if (!(await argon2.verify(user.password, dto.password))) {
       throw new BadRequestException('密码错误');
     }
+    const payload = { name: user.name, sub: user.id };
     delete user.password;
     return {
       message: '登录成功',
       data: user,
+      access_token: this.jwtService.sign(payload),
     };
   }
 }
