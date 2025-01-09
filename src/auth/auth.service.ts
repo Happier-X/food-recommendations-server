@@ -44,7 +44,7 @@ export class AuthService {
     if (!(await argon2.verify(user.password, dto.password))) {
       throw new BadRequestException('密码错误');
     }
-    const payload = { name: user.name, sub: user.id };
+    const payload = { username: user.name, sub: user.id };
     delete user.password;
     return {
       message: '登录成功',
