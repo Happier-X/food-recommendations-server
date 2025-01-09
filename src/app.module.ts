@@ -8,6 +8,7 @@ import { jwtConstants } from './auth/constants';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { PrismaService } from './prisma/prisma.service';
+import { FoodModule } from './food/food.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaService } from './prisma/prisma.service';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '30d' },
     }),
+    FoodModule,
   ],
   controllers: [AppController],
   providers: [

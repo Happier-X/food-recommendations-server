@@ -20,21 +20,20 @@ model User {
   preference String   @default("")
   role       Int      @default(0)
   avatar     String   @default("")
-  foods      Food[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 
 model Food {
-  id          Int      @id @default(autoincrement())
-  name        String
-  category    String
-  address     String
-  score       Float
-  reason      String
-  image       String
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  name           String   // 美食名称
+  shopName       String   // 商家名称
+  location       String   // 店铺位置
+  rating         Float    // 评分
+  foodType       String   // 食物类型
+  recommendation String   // 推荐理由
+  imageUrl       String   // 图片链接
+  userId         Int      // 创建者ID
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
