@@ -9,6 +9,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { PrismaService } from './prisma/prisma.service';
 import { FoodModule } from './food/food.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FoodModule } from './food/food.module';
       signOptions: { expiresIn: '30d' },
     }),
     FoodModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [
