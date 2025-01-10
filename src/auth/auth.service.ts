@@ -1,9 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { RegisterDto } from './dto/register.dto';
-import * as argon2 from 'argon2';
-import { LoginDto } from './dto/login.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as argon2 from 'argon2';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
@@ -39,14 +39,15 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new BadRequestException('用户不存在');
+      throw new HttpException('用户不存在', HttpStatus.BAD_REQUEST);
     }
     if (!(await argon2.verify(user.password, dto.password))) {
-      throw new BadRequestException('密码错误');
+      throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
     }
     const payload = { username: user.name, sub: user.id };
     delete user.password;
     return {
+      code: HttpStatus.OK,
       message: '登录成功',
       data: user,
       access_token: this.jwtService.sign(payload),
