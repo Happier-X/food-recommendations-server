@@ -16,18 +16,41 @@ export class FoodService {
   }
 
   findAll() {
-    return `This action returns all food`;
+    return this.prismaService.food.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} food`;
+    return this.prismaService.food.findFirst({
+      where: { id },
+    });
   }
 
   update(id: number, updateFoodDto: UpdateFoodDto) {
-    return `This action updates a #${id} food`;
+    return this.prismaService.food.update({
+      where: {
+        id,
+      },
+      data: {
+        id: updateFoodDto.id,
+        name: updateFoodDto.name,
+        shopName: updateFoodDto.shopName,
+        location: updateFoodDto.location,
+        rating: updateFoodDto.rating,
+        foodType: updateFoodDto.foodType,
+        recommendation: updateFoodDto.recommendation,
+        imageUrl: updateFoodDto.imageUrl,
+      },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} food`;
+    this.prismaService.food.delete({
+      where: {
+        id,
+      },
+    });
+    return {
+      message: '删除成功',
+    };
   }
 }

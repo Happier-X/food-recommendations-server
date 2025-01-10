@@ -23,8 +23,7 @@ export class FoodController {
   }
 
   @Get()
-  findAll(@Req() req: Request) {
-    console.log(req.user);
+  findAll() {
     return this.foodService.findAll();
   }
 
