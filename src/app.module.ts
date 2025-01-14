@@ -10,6 +10,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { PrismaService } from './prisma/prisma.service';
 import { FoodModule } from './food/food.module';
 import { UploadModule } from './upload/upload.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UploadModule } from './upload/upload.module';
     }),
     FoodModule,
     UploadModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
