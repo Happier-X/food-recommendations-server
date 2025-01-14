@@ -13,6 +13,5 @@ export class CreateFoodDto {
   foodType: string; // 食物类型
   @IsNotEmpty()
   recommendation: string; // 推荐理由
-  @IsNotEmpty()
   imageUrl: string; // 图片链接
 }

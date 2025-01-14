@@ -38,7 +38,7 @@ export class FoodService {
         rating: updateFoodDto.rating,
         foodType: updateFoodDto.foodType,
         recommendation: updateFoodDto.recommendation,
-        imageUrl: updateFoodDto.imageUrl,
+        imageUrl: updateFoodDto.imageUrl || '',
       },
     });
   }
