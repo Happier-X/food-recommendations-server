@@ -19,20 +19,31 @@ export class FoodService {
     let food = await this.prismaService.food.findMany();
     // forEach是同步执行的,内部的异步操作不会等待
     // 需要使用Promise.all来等待所有异步操作完成
-    const foodWithUser = await Promise.all(
+    const foodWithUserAndAverageRating = await Promise.all(
       food.map(async (item) => {
         const user = await this.prismaService.user.findUnique({
           where: {
             id: item.userId,
           },
         });
+        const ratings = await this.prismaService.rating.findMany({
+          where: {
+            foodId: item.id,
+          },
+        });
+        const sumRating = ratings.reduce(
+          (acc, curr) => acc + curr.userRating,
+          0,
+        );
+        const averageRating = (sumRating + item.rating) / (ratings.length + 1);
         return {
           ...item,
           user,
+          averageRating,
         };
       }),
     );
-    return foodWithUser;
+    return foodWithUserAndAverageRating;
   }
 
   async findOne(id: number, user?: any) {
