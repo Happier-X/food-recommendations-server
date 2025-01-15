@@ -32,6 +32,7 @@ model Food {
   foodType       String   // 食物类型
   recommendation String   // 推荐理由
   imageUrl       String   // 图片链接
+  rating         Float    // 评分
   userId         Int      // 创建者ID
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -41,15 +42,6 @@ model Collection{
   id Int @id @default(autoincrement())
   userId Int
   foodId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Rating {
-  id Int @id @default(autoincrement())
-  userId Int
-  foodId Int
-  rating Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
