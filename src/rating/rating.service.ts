@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { UpdateRatingDto } from './dto/update-rating.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class RatingService {
-  create(createRatingDto: CreateRatingDto) {
-    return 'This action adds a new rating';
-  }
-
-  findAll() {
-    return `This action returns all rating`;
+  constructor(private prismaService: PrismaService) {}
+  async create(createRatingDto: CreateRatingDto, user) {
+    const existingRating = await this.prismaService.rating.findFirst({
+      where: {
+        foodId: +createRatingDto.foodId,
+        userId: user.userId,
+      },
+    });
+    if (existingRating) {
+      await this.prismaService.rating.update({
+        where: { id: existingRating.id },
+        data: { userRating: createRatingDto.userRating },
+      });
+    } else {
+      await this.prismaService.rating.create({
+        data: {
+          ...createRatingDto,
+          userId: user.userId,
+        },
+      });
+    }
+    return {
+      message: '评分成功',
+    };
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} rating`;
-  }
-
-  update(id: number, updateRatingDto: UpdateRatingDto) {
-    return `This action updates a #${id} rating`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} rating`;
+    return this.prismaService.rating.findMany({
+      where: {
+        foodId: +id,
+      },
+    });
   }
 }

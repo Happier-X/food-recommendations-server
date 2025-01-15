@@ -60,10 +60,28 @@ export class FoodService {
       isCollected = collection !== null; // 明确判断是否存在收藏记录
     }
 
+    // 获取用户评分
+    const userRating = await this.prismaService.rating.findFirst({
+      where: {
+        foodId: +id,
+        userId: user.userId,
+      },
+    });
+
+    const ratings = await this.prismaService.rating.findMany({
+      where: {
+        foodId: +id,
+      },
+    });
+    const sumRating = ratings.reduce((acc, curr) => acc + curr.userRating, 0);
+    const averageRating = (sumRating + food.rating) / (ratings.length + 1);
+
     return {
       ...food,
       user: foodUser,
       isCollected,
+      userRating: userRating?.userRating,
+      averageRating,
     };
   }
 
