@@ -82,4 +82,22 @@ export class FoodService {
       message: '删除成功',
     };
   }
+
+  async findByCondition(id?: string, name?: string) {
+    const where: any = {};
+
+    if (id && id !== '0') {
+      where.foodType = id;
+    }
+
+    if (name) {
+      where.name = {
+        contains: name,
+      };
+    }
+
+    return this.prismaService.food.findMany({
+      where,
+    });
+  }
 }

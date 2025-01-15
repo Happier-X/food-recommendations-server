@@ -1,17 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Req,
 } from '@nestjs/common';
-import { FoodService } from './food.service';
+import { Request } from 'express';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
-import { Request } from 'express';
+import { FoodService } from './food.service';
 
 @Controller('food')
 export class FoodController {
@@ -40,5 +40,10 @@ export class FoodController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.foodService.remove(+id);
+  }
+
+  @Get('search/:id?/:name?')
+  findByCondition(@Param('id') id: string, @Param('name') name: string) {
+    return this.foodService.findByCondition(id, name);
   }
 }
