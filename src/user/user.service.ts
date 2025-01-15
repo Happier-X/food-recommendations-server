@@ -5,12 +5,24 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
-  getUserInfo(user) {
-    return this.prismaService.user.findUnique({
+  async getUserInfo(user) {
+    let userInfo;
+    userInfo = await this.prismaService.user.findUnique({
       where: {
         id: user.userId,
       },
     });
+    userInfo.collectionCount = await this.prismaService.collection.count({
+      where: {
+        userId: user.userId,
+      },
+    });
+    userInfo.recommendCount = await this.prismaService.food.count({
+      where: {
+        userId: user.userId,
+      },
+    });
+    return userInfo;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
