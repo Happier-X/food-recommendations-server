@@ -28,8 +28,8 @@ export class FoodController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.foodService.findOne(+id);
+  findOne(@Param('id') id: string, @Req() req: Request) {
+    return this.foodService.findOne(+id, req.user);
   }
 
   @Patch(':id')

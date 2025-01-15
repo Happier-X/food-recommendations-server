@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCollectionDto } from './dto/create-collection.dto';
-import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateCollectionDto } from './dto/create-collection.dto';
 
 @Injectable()
 export class CollectionService {
@@ -40,19 +39,27 @@ export class CollectionService {
     }
   }
 
-  findAll() {
-    return `This action returns all collection`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} collection`;
-  }
-
-  update(id: number, updateCollectionDto: UpdateCollectionDto) {
-    return `This action updates a #${id} collection`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} collection`;
+  async findAll(user) {
+    let collections = [];
+    collections = await this.prismaService.collection.findMany({
+      where: {
+        userId: user.userId,
+      },
+    });
+    for (const collection of collections) {
+      collection.food = await this.prismaService.food.findUnique({
+        where: {
+          id: collection.foodId,
+        },
+      });
+    }
+    for (const collection of collections) {
+      collection.food.user = await this.prismaService.user.findUnique({
+        where: {
+          id: collection.food.userId,
+        },
+      });
+    }
+    return collections;
   }
 }

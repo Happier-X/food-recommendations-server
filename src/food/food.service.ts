@@ -35,22 +35,35 @@ export class FoodService {
     return foodWithUser;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, user?: any) {
     const food = await this.prismaService.food.findUnique({
       where: {
         id,
       },
     });
 
-    const user = await this.prismaService.user.findUnique({
+    const foodUser = await this.prismaService.user.findUnique({
       where: {
         id: food.userId,
       },
     });
 
+    // 获取收藏状态
+    let isCollected = false;
+    if (user) {
+      const collection = await this.prismaService.collection.findFirst({
+        where: {
+          foodId: +id, // 确保转换为数字类型
+          userId: user.userId,
+        },
+      });
+      isCollected = collection !== null; // 明确判断是否存在收藏记录
+    }
+
     return {
       ...food,
-      user,
+      user: foodUser,
+      isCollected,
     };
   }
 
