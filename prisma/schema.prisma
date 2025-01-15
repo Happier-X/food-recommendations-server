@@ -37,3 +37,11 @@ model Food {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+model Collection{
+  id Int @id @default(autoincrement())
+  userId Int
+  foodId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
