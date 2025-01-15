@@ -28,10 +28,19 @@ export class UserService {
   }
 
   async getRecommendFood(user) {
-    return this.prismaService.food.findMany({
+    let recommendFood = [];
+    recommendFood = await this.prismaService.food.findMany({
       where: {
         userId: user.userId,
       },
     });
+    for (const food of recommendFood) {
+      food.user = await this.prismaService.user.findUnique({
+        where: {
+          id: food.userId,
+        },
+      });
+    }
+    return recommendFood;
   }
 }
