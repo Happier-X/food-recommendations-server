@@ -26,4 +26,12 @@ export class UserService {
     });
     return '更新成功';
   }
+
+  async getRecommendFood(user) {
+    return this.prismaService.food.findMany({
+      where: {
+        userId: user.userId,
+      },
+    });
+  }
 }

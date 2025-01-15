@@ -23,4 +23,9 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
+
+  @Get('/recommend')
+  getRecommendFood(@Req() req) {
+    return this.userService.getRecommendFood(req.user);
+  }
 }
