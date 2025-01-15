@@ -11,6 +11,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { FoodModule } from './food/food.module';
 import { UploadModule } from './upload/upload.module';
 import { UserModule } from './user/user.module';
+import { CollectionModule } from './collection/collection.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
     FoodModule,
     UploadModule,
     UserModule,
+    CollectionModule,
   ],
   controllers: [AppController],
   providers: [
