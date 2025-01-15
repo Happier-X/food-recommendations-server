@@ -12,6 +12,7 @@ import { FoodModule } from './food/food.module';
 import { UploadModule } from './upload/upload.module';
 import { UserModule } from './user/user.module';
 import { CollectionModule } from './collection/collection.module';
+import { RatingModule } from './rating/rating.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CollectionModule } from './collection/collection.module';
     UploadModule,
     UserModule,
     CollectionModule,
+    RatingModule,
   ],
   controllers: [AppController],
   providers: [
