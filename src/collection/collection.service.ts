@@ -7,13 +7,37 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CollectionService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(createCollectionDto: CreateCollectionDto, user) {
-    return this.prismaService.collection.create({
-      data: {
+  async create(createCollectionDto: CreateCollectionDto, user) {
+    // 查找是否已经收藏
+    const existingCollection = await this.prismaService.collection.findFirst({
+      where: {
         foodId: +createCollectionDto.foodId,
         userId: user.userId,
       },
     });
+
+    if (existingCollection) {
+      // 如果已经收藏,则删除
+      await this.prismaService.collection.delete({
+        where: {
+          id: existingCollection.id,
+        },
+      });
+      return {
+        message: '取消收藏成功',
+      };
+    } else {
+      // 如果未收藏,则创建
+      await this.prismaService.collection.create({
+        data: {
+          foodId: +createCollectionDto.foodId,
+          userId: user.userId,
+        },
+      });
+      return {
+        message: '收藏成功',
+      };
+    }
   }
 
   findAll() {
