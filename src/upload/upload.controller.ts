@@ -12,7 +12,7 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return {
-      url: `/uploads/${file.filename}`,
+      url: `/static/${file.filename}`,
       filename: file.filename,
     };
   }
