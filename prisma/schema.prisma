@@ -31,7 +31,7 @@ model Food {
   location       String   // 店铺位置
   foodType       String   // 食物类型
   recommendation String   // 推荐理由
-  imageUrl       String   // 图片链接
+  imageUrl       Json   // 图片链接
   rating         Float    // 评分
   userId         Int      // 创建者ID
   createdAt      DateTime @default(now())

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { UploadController } from './upload.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { extname, join } from 'path';
+import { extname } from 'path';
+import { UploadController } from './upload.controller';
 
 @Module({
   imports: [
