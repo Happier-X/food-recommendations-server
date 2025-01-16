@@ -11,6 +11,9 @@ export class UploadController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log('文件上传成功', file);
+    return {
+      url: `/uploads/${file.filename}`,
+      filename: file.filename,
+    };
   }
 }
