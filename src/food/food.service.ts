@@ -108,6 +108,8 @@ export class FoodService {
         name: updateFoodDto.name,
         shopName: updateFoodDto.shopName,
         location: updateFoodDto.location,
+        latitude: updateFoodDto.latitude,
+        longitude: updateFoodDto.longitude,
         rating: updateFoodDto.rating,
         foodType: updateFoodDto.foodType,
         recommendation: updateFoodDto.recommendation,
@@ -145,23 +147,23 @@ export class FoodService {
     });
   }
 
-  async findByLocation(lat: string, lng: string,radius:number = 1000) {
+  async findByLocation(lat: string, lng: string, radius: number = 1000) {
     const location = point([parseFloat(lng), parseFloat(lat)]);
     const foods = await this.prismaService.food.findMany({
       where: {
         latitude: {
-          not:null,
+          not: null,
         },
         longitude: {
-          not:null,
-        }
-      }
-    })
+          not: null,
+        },
+      },
+    });
     const nearFoods = foods.filter((food) => {
       const foodLocation = point([food.longitude, food.latitude]);
       const dist = distance(location, foodLocation, { units: 'meters' });
       return dist <= radius;
-    })
+    });
     const foodWithUserAndAverageRating = await Promise.all(
       nearFoods.map(async (item) => {
         const user = await this.prismaService.user.findUnique({
