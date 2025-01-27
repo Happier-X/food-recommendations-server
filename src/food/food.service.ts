@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { distance, point } from '@turf/turf';
 
 @Injectable()
 export class FoodService {
   constructor(private prismaService: PrismaService) {}
+
   create(createFoodDto: CreateFoodDto, user) {
     return this.prismaService.food.create({
       data: {
@@ -96,8 +98,8 @@ export class FoodService {
     };
   }
 
-  update(id: number, updateFoodDto: UpdateFoodDto) {
-    return this.prismaService.food.update({
+  async update(id: number, updateFoodDto: UpdateFoodDto) {
+    return await this.prismaService.food.update({
       where: {
         id,
       },
@@ -141,5 +143,49 @@ export class FoodService {
     return this.prismaService.food.findMany({
       where,
     });
+  }
+
+  async findByLocation(lat: string, lng: string,radius:number = 1000) {
+    const location = point([parseFloat(lng), parseFloat(lat)]);
+    const foods = await this.prismaService.food.findMany({
+      where: {
+        latitude: {
+          not:null,
+        },
+        longitude: {
+          not:null,
+        }
+      }
+    })
+    const nearFoods = foods.filter((food) => {
+      const foodLocation = point([food.longitude, food.latitude]);
+      const dist = distance(location, foodLocation, { units: 'meters' });
+      return dist <= radius;
+    })
+    const foodWithUserAndAverageRating = await Promise.all(
+      nearFoods.map(async (item) => {
+        const user = await this.prismaService.user.findUnique({
+          where: {
+            id: item.userId,
+          },
+        });
+        const ratings = await this.prismaService.rating.findMany({
+          where: {
+            foodId: item.id,
+          },
+        });
+        const sumRating = ratings.reduce(
+          (acc, curr) => acc + curr.userRating,
+          0,
+        );
+        const averageRating = (sumRating + item.rating) / (ratings.length + 1);
+        return {
+          ...item,
+          user,
+          averageRating,
+        };
+      }),
+    );
+    return foodWithUserAndAverageRating;
   }
 }

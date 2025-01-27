@@ -29,6 +29,8 @@ model Food {
   name           String   // 美食名称
   shopName       String   // 商家名称
   location       String   // 店铺位置
+  longitude      Float    // 经度
+  latitude       Float    // 纬度
   foodType       String   // 食物类型
   recommendation String   // 推荐理由
   imageUrl       Json   // 图片链接

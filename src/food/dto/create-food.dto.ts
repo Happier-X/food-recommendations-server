@@ -14,4 +14,8 @@ export class CreateFoodDto {
   @IsNotEmpty()
   recommendation: string; // 推荐理由
   imageUrl: string; // 图片链接
+  @IsNotEmpty()
+  longitude: number; // 经度
+  @IsNotEmpty()
+  latitude: number; // 纬度
 }

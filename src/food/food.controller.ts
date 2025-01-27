@@ -46,4 +46,9 @@ export class FoodController {
   findByCondition(@Param('id') id: string, @Param('name') name: string) {
     return this.foodService.findByCondition(id, name);
   }
+
+  @Get('searchByLocation/:lat/:lng')
+  findByLocation(@Param('lat') lat: string, @Param('lng') lng: string) {
+    return this.foodService.findByLocation(lat, lng);
+  }
 }
