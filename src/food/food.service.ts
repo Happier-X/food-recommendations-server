@@ -88,7 +88,6 @@ export class FoodService {
     });
     const sumRating = ratings.reduce((acc, curr) => acc + curr.userRating, 0);
     const averageRating = (sumRating + food.rating) / (ratings.length + 1);
-
     return {
       ...food,
       user: foodUser,
@@ -142,9 +141,34 @@ export class FoodService {
       };
     }
 
-    return this.prismaService.food.findMany({
+    const foods = await this.prismaService.food.findMany({
       where,
     });
+    const foodWithUserAndAverageRating = await Promise.all(
+      foods.map(async (item) => {
+        const user = await this.prismaService.user.findUnique({
+          where: {
+            id: item.userId,
+          },
+        });
+        const ratings = await this.prismaService.rating.findMany({
+          where: {
+            foodId: item.id,
+          },
+        });
+        const sumRating = ratings.reduce(
+          (acc, curr) => acc + curr.userRating,
+          0,
+        );
+        const averageRating = (sumRating + item.rating) / (ratings.length + 1);
+        return {
+          ...item,
+          user,
+          averageRating,
+        };
+      }),
+    );
+    return foodWithUserAndAverageRating;
   }
 
   async findByLocation(lat: string, lng: string, radius: number = 1000) {
